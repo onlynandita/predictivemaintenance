@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Model Evaluation | IOCL Predictive Maintenance</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f3f6fb;
+            font-family: Arial, sans-serif;
+            color: #243247;
+        }
+
+        .header {
+            background: #003366;
+            color: white;
+            padding: 25px 0;
+        }
+
+        .header h2 {
+            font-weight: bold;
+        }
+
+        .evaluation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px 12px;
+            border-radius: 12px;
+            text-align: center;
+            height: 100%;
+            border: 1px solid #e8edf5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-value {
+            font-size: 27px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .metric-label {
+            color: #666;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .comparison-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .section-description {
+            color: #657184;
+            line-height: 1.7;
+        }
+
+        .result-highlight {
+            background: #edf5ff;
+            border-left: 5px solid #003366;
+            padding: 18px;
+            border-radius: 6px;
+        }
+
+        .table thead th {
+            white-space: nowrap;
+        }
+
+        .badge-recommended {
+            background: #e3f6e8;
+            color: #176b32;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: #666;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+    <div class="container">
+        <h2>IOCL Predictive Maintenance System</h2>
+
+        <p class="mb-3">
+            Machine Learning Model Evaluation and Performance Analysis
+        </p>
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="btn btn-light"
+        >
+            Back to Dashboard
+        </a>
+    </div>
+</header>
+
+
+<main class="container my-4">
+
+    <!-- =================================================
+         INTRODUCTION
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>Model Evaluation Overview</h3>
+
+        <p class="section-description">
+            This page presents the experimental evaluation of machine
+            failure prediction models trained using the AI4I 2020
+            Predictive Maintenance dataset. Logistic Regression,
+            Decision Tree and Random Forest were compared using the
+            original training data and SMOTE-based resampling.
+            Precision-recall analysis, confusion matrices and
+            classification-threshold experiments were also conducted.
+        </p>
+
+        <div class="result-highlight">
+            <strong>Important evaluation detail:</strong>
+            The experiments below use 8,000 training records and
+            2,000 test records. The test set retains its original
+            class distribution, including 68 machine-failure cases.
+            SMOTE was applied only to training data.
+        </div>
+    </div>
+
+
+    <!-- =================================================
+         ORIGINAL RANDOM FOREST METRICS
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>1. Random Forest Performance</h3>
+
+        <p class="section-description">
+            The following metrics correspond to the Random Forest
+            experiment using the original training data, at the
+            default classification threshold of 0.50.
+        </p>
+
+        <div class="row g-3 mt-2">
+
+            <div class="col-6 col-md-4 col-lg">
+                <div class="metric-card">
+                    <div class="metric-value">96.90%</div>
+                    <div class="metric-label">Accuracy</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+                <div class="metric-card">
+                    <div class="metric-value">56.25%</div>
+                    <div class="metric-label">Failure Precision</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+                <div class="metric-card">
+                    <div class="metric-value">39.71%</div>
+                    <div class="metric-label">Failure Recall</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+                <div class="metric-card">
+                    <div class="metric-value">46.55%</div>
+                    <div class="metric-label">Failure F1-Score</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-lg">
+                <div class="metric-card">
+                    <div class="metric-value">94.38%</div>
+                    <div class="metric-label">ROC-AUC</div>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="section-description mt-3 mb-0">
+            These metrics are from the latest model-comparison experiment.
+            They differ from earlier results because the experiment uses
+            a stratified train-test split. The threshold-analysis
+            experiment should be interpreted separately.
+        </p>
+    </div>
+
+
+    <!-- =================================================
+         MODEL COMPARISON
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>2. Model Comparison: Original Data vs SMOTE</h3>
+
+        <p class="section-description">
+            This graph compares Logistic Regression, Decision Tree
+            and Random Forest under two training strategies.
+            SMOTE increases the representation of the minority
+            machine-failure class in the training data.
+        </p>
+
+        <img
+            src="{{ url_for('static', filename='model_comparison_smote.png') }}"
+            alt="Comparison of Logistic Regression, Decision Tree and Random Forest with original training data and SMOTE"
+            class="comparison-image"
+            loading="lazy"
+        >
+
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-striped text-center align-middle">
+
+                <thead class="table-primary">
+                    <tr>
+                        <th>Model</th>
+                        <th>Training Strategy</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>ROC-AUC</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Logistic Regression</td>
+                        <td>Original</td>
+                        <td>81.05%</td>
+                        <td>12.53%</td>
+                        <td>76.47%</td>
+                        <td>21.53%</td>
+                        <td>86.91%</td>
+                    </tr>
+
+                    <tr>
+                        <td>Logistic Regression</td>
+                        <td>SMOTE</td>
+                        <td>82.40%</td>
+                        <td>13.02%</td>
+                        <td>73.53%</td>
+                        <td>22.12%</td>
+                        <td>85.07%</td>
+                    </tr>
+
+                    <tr>
+                        <td>Decision Tree</td>
+                        <td>Original</td>
+                        <td>96.15%</td>
+                        <td>43.48%</td>
+                        <td>44.12%</td>
+                        <td>43.80%</td>
+                        <td>71.05%</td>
+                    </tr>
+
+                    <tr>
+                        <td>Decision Tree</td>
+                        <td>SMOTE</td>
+                        <td>92.85%</td>
+                        <td>25.49%</td>
+                        <td>57.35%</td>
+                        <td>35.29%</td>
+                        <td>75.73%</td>
+                    </tr>
+
+                    <tr class="table-success">
+                        <td><strong>Random Forest</strong></td>
+                        <td>Original</td>
+                        <td><strong>96.90%</strong></td>
+                        <td><strong>56.25%</strong></td>
+                        <td>39.71%</td>
+                        <td><strong>46.55%</strong></td>
+                        <td><strong>94.38%</strong></td>
+                    </tr>
+
+                    <tr>
+                        <td>Random Forest</td>
+                        <td>SMOTE</td>
+                        <td>94.10%</td>
+                        <td>30.47%</td>
+                        <td>57.35%</td>
+                        <td>39.80%</td>
+                        <td>92.75%</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+        <p class="section-description">
+            <strong>Discussion:</strong>
+            Random Forest trained on the original data achieved the
+            highest accuracy, precision, F1-score and ROC-AUC in this
+            comparison. Random Forest with SMOTE achieved higher recall,
+            detecting more failures but also generating more false alarms.
+        </p>
+    </div>
+
+
+    <!-- =================================================
+         PRECISION RECALL CURVE
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>3. Precision-Recall Curve</h3>
+
+        <p class="section-description">
+            The precision-recall curve examines the trade-off between
+            detecting actual machine failures and avoiding false alarms
+            at different classification thresholds. Average Precision
+            (AP) summarizes the precision-recall curve.
+        </p>
+
+        <img
+            src="{{ url_for('static', filename='precision_recall_curve.png') }}"
+            alt="Precision-recall curves for all six model configurations"
+            class="comparison-image"
+            loading="lazy"
+        >
+
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-striped text-center align-middle">
+
+                <thead class="table-primary">
+                    <tr>
+                        <th>Model Configuration</th>
+                        <th>Average Precision</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="table-success">
+                        <td>Random Forest - Original</td>
+                        <td><strong>0.5394</strong></td>
+                    </tr>
+
+                    <tr>
+                        <td>Logistic Regression - Original</td>
+                        <td>0.3916</td>
+                    </tr>
+
+                    <tr>
+                        <td>Random Forest - SMOTE</td>
+                        <td>0.3805</td>
+                    </tr>
+
+                    <tr>
+                        <td>Logistic Regression - SMOTE</td>
+                        <td>0.3335</td>
+                    </tr>
+
+                    <tr>
+                        <td>Decision Tree - Original</td>
+                        <td>0.2108</td>
+                    </tr>
+
+                    <tr>
+                        <td>Decision Tree - SMOTE</td>
+                        <td>0.1607</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+        <p class="section-description">
+            Random Forest trained on the original data achieved the
+            highest Average Precision of 0.5394 among the evaluated
+            configurations. This supports its selection as the
+            current baseline model.
+        </p>
+    </div>
+
+
+    <!-- =================================================
+         CONFUSION MATRIX
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>4. Random Forest Confusion Matrix Comparison</h3>
+
+        <p class="section-description">
+            A confusion matrix shows how many healthy machines and
+            machine failures were correctly or incorrectly classified.
+        </p>
+
+        <img
+            src="{{ url_for('static', filename='random_forest_confusion_comparison.png') }}"
+            alt="Confusion matrix comparison of original Random Forest and SMOTE Random Forest"
+            class="comparison-image"
+            loading="lazy"
+        >
+
+        <div class="row g-4 mt-2">
+
+            <div class="col-md-6">
+                <h5>Random Forest - Original Data</h5>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle">
+
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Actual / Predicted</th>
+                                <th>Healthy</th>
+                                <th>Failure</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <th>Healthy</th>
+                                <td>1911</td>
+                                <td>21</td>
+                            </tr>
+
+                            <tr>
+                                <th>Failure</th>
+                                <td>41</td>
+                                <td>27</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h5>Random Forest - SMOTE</h5>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle">
+
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Actual / Predicted</th>
+                                <th>Healthy</th>
+                                <th>Failure</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <th>Healthy</th>
+                                <td>1843</td>
+                                <td>89</td>
+                            </tr>
+
+                            <tr>
+                                <th>Failure</th>
+                                <td>29</td>
+                                <td>39</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="section-description mt-3">
+            The original Random Forest correctly detected 27 of 68
+            actual failures and produced 21 false alarms. The SMOTE
+            version detected 39 failures and produced 89 false alarms.
+            The choice between them depends on the operational cost
+            of missed failures and unnecessary inspections.
+        </p>
+    </div>
+
+
+    <!-- =================================================
+         THRESHOLD ANALYSIS
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>5. Random Forest Threshold Analysis</h3>
+
+        <p class="section-description">
+            A classification threshold determines how high the estimated
+            failure probability must be before the system predicts a
+            machine failure. Lower thresholds generally detect more
+            failures but may produce more false alarms.
+        </p>
+
+        <img
+            src="{{ url_for('static', filename='threshold_analysis.png') }}"
+            alt="Random Forest precision, recall and F1-score at different classification thresholds"
+            class="comparison-image"
+            loading="lazy"
+        >
+
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-striped text-center align-middle">
+
+                <thead class="table-primary">
+                    <tr>
+                        <th>Threshold</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>False Alarms</th>
+                        <th>Missed Failures</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>0.20</td>
+                        <td>93.60%</td>
+                        <td>31.93%</td>
+                        <td>77.94%</td>
+                        <td>45.30%</td>
+                        <td>113</td>
+                        <td>15</td>
+                    </tr>
+
+                    <tr class="table-success">
+                        <td><strong>0.30</strong></td>
+                        <td>95.20%</td>
+                        <td>38.52%</td>
+                        <td>69.12%</td>
+                        <td><strong>49.47%</strong></td>
+                        <td>75</td>
+                        <td>21</td>
+                    </tr>
+
+                    <tr>
+                        <td>0.40</td>
+                        <td>96.05%</td>
+                        <td>43.68%</td>
+                        <td>55.88%</td>
+                        <td>49.03%</td>
+                        <td>49</td>
+                        <td>30</td>
+                    </tr>
+
+                    <tr>
+                        <td>0.50</td>
+                        <td>96.85%</td>
+                        <td>54.72%</td>
+                        <td>42.65%</td>
+                        <td>47.93%</td>
+                        <td>24</td>
+                        <td>39</td>
+                    </tr>
+
+                    <tr>
+                        <td>0.60</td>
+                        <td>97.25%</td>
+                        <td>68.57%</td>
+                        <td>35.29%</td>
+                        <td>46.60%</td>
+                        <td>11</td>
+                        <td>44</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="result-highlight mt-3">
+            <strong>Experimental observation:</strong>
+            Threshold 0.30 achieved the highest F1-score among the
+            five tested thresholds.
+            
+        </div>
+    </div>
+
+
+    <!-- =================================================
+         RESULTS AND DISCUSSION
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>6. Results and Discussion</h3>
+
+        <p>
+            The dataset contains 10,000 records, of which 9,661
+            represent healthy machines and 339 represent machine
+            failures. The minority-class proportion is therefore
+            3.39%, making class imbalance an important consideration
+            during model development and evaluation.
+        </p>
+
+        <p>
+            Three classification algorithms were compared:
+            Logistic Regression, Decision Tree and Random Forest.
+            Random Forest trained on the original training data
+            achieved 96.90% accuracy and an ROC-AUC of 94.38%,
+            along with the highest Average Precision of 0.5394
+            among the six configurations.
+        </p>
+
+        <p>
+            Applying SMOTE increased failure recall for both
+            Decision Tree and Random Forest in these experiments.
+            However, it also increased false positives and reduced
+            overall accuracy. This demonstrates that improving
+            failure detection can involve a trade-off with
+            unnecessary maintenance alerts.
+        </p>
+
+        <p>
+            Threshold experiments showed that reducing the
+            classification threshold increased recall while
+            generally decreasing precision. A threshold of 0.30
+            produced the highest F1-score among the tested values.
+            
+        </p>
+
+        
+    </div>
+
+
+    
+
+
+    <!-- =================================================
+         CONCLUSION
+    ================================================== -->
+
+    <div class="evaluation-card">
+        <h3>7. Conclusion</h3>
+
+        <p>
+             Random Forest trained on the
+            original data is the current baseline because it achieved
+            the strongest overall results across several evaluation
+            measures in the reported experiments.
+        </p>
+
+        <p class="mb-0">
+            The comparison also highlights the importance of
+            failure recall, false alarms, class imbalance and
+            threshold selection. Further validation is needed
+            before selecting the final model configuration and
+            deploying the system in a real industrial environment.
+        </p>
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+    <div class="container">
+        IOCL Predictive Maintenance System | Model Evaluation
+    </div>
+</footer>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

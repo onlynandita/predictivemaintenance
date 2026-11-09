@@ -1,0 +1,7 @@
+Model,Experiment,Accuracy,Precision,Recall,F1-score,ROC-AUC,True Negatives,False Positives,False Negatives,True Positives
+Logistic Regression,Original Training Data,81.05,12.53,76.47,21.53,86.91,1569,363,16,52
+Logistic Regression,SMOTE,82.4,13.02,73.53,22.12,85.07,1598,334,18,50
+Decision Tree,Original Training Data,96.15,43.48,44.12,43.8,71.05,1893,39,38,30
+Decision Tree,SMOTE,92.85,25.49,57.35,35.29,75.73,1818,114,29,39
+Random Forest,Original Training Data,96.9,56.25,39.71,46.55,94.38,1911,21,41,27
+Random Forest,SMOTE,94.1,30.47,57.35,39.8,92.75,1843,89,29,39
